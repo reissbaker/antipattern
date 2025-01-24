@@ -16,7 +16,7 @@ Goals:
 Anti-goals:
 
 * Decorators
-* Classes
+* Forcing the rest of your code to use classes
 * Automatic memoization
 * Graph algorithms
 
@@ -25,31 +25,38 @@ Anti-goals:
 ```typescript
 import { registry } from "antipattern";
 
-const aws = {
-  upload: async (file: string) => {
-    // ...
-  },
-};
-const local = {
-  upload: async (file: string) => {
-    // ...
-  },
-};
-
-export const deps = registry({
+export const deps = registry(class {
+  // All public methods must be async, and can be mocked
   async user() {
     return process.env.USER;
-  },
+  }
   async pass() {
     return process.env.PASS;
-  },
+  }
   async login() {
     return `${await this.user()}:${await this.pass()}`;
-  },
+  }
   async cloud() {
-    if(process.env.NODE_ENV === "development") return local;
-    return aws;
-  },
+    if(process.env.NODE_ENV === "development") return this.local();
+    return this.aws();
+  }
+
+  // Private methods can be whatever
+  private aws() {
+    return {
+      upload: async (file: string) => {
+        // ...
+      },
+    };
+  }
+
+  private local() {
+    return {
+      upload: async (file: string) => {
+        // ...
+      },
+    };
+  }
 });
 
 // elsewhere:

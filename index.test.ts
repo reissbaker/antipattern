@@ -1,20 +1,24 @@
 import { it, describe, expect } from "vitest";
-import { registry, withMock } from ".";
+import { registry, withMock } from "./index";
 
-const r = registry({
+const r = registry(class {
   async hello() {
     return  "hello";
-  },
+  }
 
   async world() {
     return "world";
-  },
+  }
 
   async foo() {
     const h = await this.hello();
     const w = await this.world();
-    return `${h} ${w}`;
-  },
+    return `${h}${this.space()}${w}`;
+  }
+
+  private space() {
+    return " ";
+  }
 });
 
 describe("withMock", () => {
