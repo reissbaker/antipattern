@@ -4,7 +4,7 @@
   "description": "Dependency injection for dummies",
   "main": "build/index.js",
   "type": "module",
-  "types": "./index.ts",
+  "types": "./build/index.d.ts",
   "scripts": {
     "test": "vitest --run"
   },
