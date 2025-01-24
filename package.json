@@ -1,0 +1,25 @@
+{
+  "name": "antipattern",
+  "version": "0.0.1",
+  "description": "Dependency injection for dummies",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "@reissbaker",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
+  },
+  "files": [
+    "index.ts",
+    "index.test.ts",
+    "vitest.config.ts",
+    "README.md",
+    "package.json",
+    "tsconfig.json",
+    "/build"
+  ]
+}
