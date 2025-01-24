@@ -8,7 +8,19 @@
 
 A dependency injection framework for dummies.
 
-Examples:
+Goals:
+
+* Define your dependencies in a file
+* Support robust dependency mocking
+
+Anti-goals:
+
+* Decorators
+* Classes
+* Automatic memoization
+* Graph algorithms
+
+## Examples:
 
 ```typescript
 import { registry } from "antipattern";
@@ -25,6 +37,15 @@ const local = {
 };
 
 export const deps = registry({
+  async user() {
+    return process.env.USER;
+  },
+  async pass() {
+    return process.env.PASS;
+  },
+  async login() {
+    return `${await this.user()}:${await this.pass()}`;
+  },
   async cloud() {
     if(process.env.NODE_ENV === "development") return local;
     return aws;
