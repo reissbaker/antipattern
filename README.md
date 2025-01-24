@@ -11,7 +11,7 @@ A dependency injection framework for dummies.
 Examples:
 
 ```typescript
-import { registry, memoize } from "antipattern";
+import { registry } from "antipattern";
 
 const aws = {
   upload: async (file: string) => {
