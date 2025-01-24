@@ -24,6 +24,7 @@ Anti-goals:
 
 ```typescript
 import { registry } from "antipattern";
+import { memo } from "radash";
 
 export const deps = registry(class {
   // All public methods must be async, and can be mocked
@@ -42,21 +43,16 @@ export const deps = registry(class {
   }
 
   // Private methods can be whatever
-  private aws() {
-    return {
-      upload: async (file: string) => {
-        // ...
-      },
-    };
-  }
-
-  private local() {
-    return {
-      upload: async (file: string) => {
-        // ...
-      },
-    };
-  }
+  private aws = memo(() => ({
+    upload: async (file: string) => {
+      // ...
+    },
+  }));
+  private local = memo(() => ({
+    upload: async (file: string) => {
+      // ...
+    },
+  }));
 });
 
 // elsewhere:

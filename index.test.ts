@@ -1,4 +1,5 @@
 import { it, describe, expect } from "vitest";
+import { memo } from "radash";
 import { registry, withMock } from "./index";
 
 const r = registry(class {
@@ -16,10 +17,8 @@ const r = registry(class {
     return `${h}${this.space()}${w}`;
   }
 
-  private space() {
-    return " ";
-  }
-});
+  private space = memo(() => " ");
+})
 
 describe("withMock", () => {
   it("mocks the returned object", async () => {
