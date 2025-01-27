@@ -1,6 +1,6 @@
 {
   "name": "antipattern",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Dependency injection for dummies",
   "main": "build/index.js",
   "type": "module",
