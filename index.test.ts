@@ -17,7 +17,8 @@ const r = registry(class {
     return `${h}${this.space()}${w}`;
   }
 
-  private space = memo(() => " ");
+  private space = memo(() => this.noop() + " ");
+  private noop = memo(() => "");
 })
 
 describe("withMock", () => {
