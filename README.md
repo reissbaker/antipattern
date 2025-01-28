@@ -60,7 +60,7 @@ const cloud = await deps.cloud();
 await cloud.upload("./README.md");
 ```
 
-Mocking:
+Mocking with automatic restoration:
 
 ```typescript
 const upload = vi.fn();
@@ -70,5 +70,18 @@ await withMock(deps, "cloud", testCloud, async () => {
   const cloud = await deps.cloud();
   await cloud.upload("./tsconfig.json");
   expect(upload).toHaveBeenCalledOnce();
+});
+```
+
+Manually mocking + restoring:
+
+```typescript
+beforeEach(() => {
+  const restores: Array<() => any> = [];
+  restores.push(mock(deps, "user", "reissbaker"));
+  restores.push(mock(deps, "pass", "hunter2s"));
+  return () => {
+    restores.forEach(restore => restore());
+  };
 });
 ```
