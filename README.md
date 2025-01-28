@@ -63,6 +63,8 @@ await cloud.upload("./README.md");
 Mocking with automatic restoration:
 
 ```typescript
+import { withMock } from "antipattern";
+
 const upload = vi.fn();
 const testCloud = { upload };
 
@@ -76,6 +78,8 @@ await withMock(deps, "cloud", testCloud, async () => {
 Manually mocking + restoring:
 
 ```typescript
+import { mock } from "antipattern";
+
 beforeEach(() => {
   const restores: Array<() => any> = [];
   restores.push(mock(deps, "user", "reissbaker"));
