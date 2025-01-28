@@ -1,6 +1,6 @@
 import { it, describe, expect } from "vitest";
 import { memo } from "radash";
-import { registry, withMock, mock } from "./index";
+import { registry, withMock, mock } from "./index.ts";
 
 const r = registry(class {
   async hello() {
