@@ -1,13 +1,16 @@
-type IsAsync<T> = T extends { [K in keyof T]: (...args: any[]) => Promise<any> } ? T : never;
+type POJO = Record<any, any>;
 
-export function registry<T>(R: { new(): IsAsync<T> }): IsAsync<T> {
-  return new R();
+export function registry<T>(R: { new(): T }): T;
+export function registry<T extends POJO>(R: T): T;
+export function registry<T extends POJO, R extends { new(): T }>(r: R | T): T {
+  if(typeof r === "function") return new r();
+  return r;
 }
 
-export async function withMock<T, K extends keyof T>(
-  r: IsAsync<T>,
+export async function withMock<T extends POJO, K extends keyof T>(
+  r: T,
   key: K,
-  replacement: Awaited<ReturnType<T[K] extends (...args: any[]) => any ? T[K] : never>>,
+  replacement: T[K],
   cb: () => any,
 ) {
   const restore = mock(r, key, replacement);
@@ -18,16 +21,13 @@ export async function withMock<T, K extends keyof T>(
   }
 }
 
-export function mock<T, K extends keyof T>(
-  r: IsAsync<T>,
+export function mock<T extends POJO, K extends keyof T>(
+  r: T,
   key: K,
-  replacement: Awaited<ReturnType<T[K] extends (...args: any[]) => any ? T[K] : never>>,
+  replacement: T[K],
 ) {
   const original = r[key];
-  // @ts-ignore
-  r[key] = async function() {
-    return replacement;
-  }.bind(r);
+  r[key] = replacement;
 
   return () => {
     r[key] = original;

@@ -17,27 +17,60 @@ const r = registry(class {
     return `${h}${this.space()}${w}`;
   }
 
+  sync() {
+    return "sync";
+  }
+
   private space = memo(() => this.noop() + " ");
   private noop = memo(() => "");
 })
 
+describe("simple object registries", async () => {
+  it("allows mocking", async () => {
+    const r = registry({
+      async hi() {
+        return "hello";
+      },
+      async world() {
+        return "world";
+      },
+      async foo() {
+        return `${await this.hi()} ${await this.world()}`
+      },
+    });
+    await withMock(r, "hi", async () => "goodbye", async () => {
+      expect(await r.hi()).toBe("goodbye");
+      expect(await r.foo()).toBe("goodbye world");
+    });
+  });
+});
+
 describe("withMock", () => {
   it("mocks the returned object", async () => {
-    await withMock(r, "hello", "goodbye", async () => {
+    await withMock(r, "hello", async () => "goodbye", async () => {
       expect(await r.hello()).toBe("goodbye");
       expect(await r.foo()).toBe("goodbye world");
     });
   });
+
   it("resets the mocks afterwards", async () => {
-    await withMock(r, "hello", "goodbye", async () => {
+    await withMock(r, "hello", async () => "goodbye", async () => {
       expect(await r.hello()).toBe("goodbye");
     });
     expect(await r.hello()).toBe("hello");
   });
+
+  it("works with non-async functions", async () => {
+    await withMock(r, "sync", () => "ok", () => {
+      expect(r.sync()).toBe("ok");
+    });
+    expect(r.sync()).toBe("sync");
+  });
 });
+
 describe("mock", () => {
   it("mocks the returned object and restores when restore is called", async () => {
-    const restore = mock(r, "hello", "goodbye");
+    const restore = mock(r, "hello", async () => "goodbye");
     expect(await r.hello()).toBe("goodbye");
     expect(await r.foo()).toBe("goodbye world");
     restore();
