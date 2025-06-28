@@ -62,6 +62,28 @@ await withMock(registry, "subject", () => "alligator", async () => {
 });
 ```
 
+Remember that with `this`, you have to define your object's functions like
+this:
+
+```typescript
+{
+  method() {
+    // you can call `this` in here, and it refers to the object
+  },
+}
+```
+
+And not like this:
+
+```typescript
+{
+  method: () => {
+    // Arrow functions will bind `this` to the outer-level `this` scope, and not
+    // to the object, so you can't call the object's own functions with `this`
+  },
+}
+```
+
 If you don't want to expose everything to callers, but you still want the
 internal functions to call the mockable methods, the `registry` function can
 also take a class, allowing you to define private fields or methods:
